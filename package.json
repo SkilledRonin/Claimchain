@@ -1,0 +1,25 @@
+{
+  "name": "claimchain",
+  "version": "1.0.0",
+  "description": "ClaimChain — Parametric micro-insurance protocol on blockchain",
+  "main": "hardhat.config.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "node": "hardhat node",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:amoy": "hardhat run scripts/deploy.js --network polygonAmoy",
+    "verify:amoy": "hardhat run scripts/verify.js --network polygonAmoy",
+    "coverage": "hardhat coverage",
+    "gas-report": "REPORT_GAS=true hardhat test"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "dotenv": "^16.3.1",
+    "hardhat": "^2.28.6"
+  },
+  "dependencies": {
+    "@chainlink/contracts": "^1.1.0",
+    "@openzeppelin/contracts": "^5.0.0"
+  }
+}

@@ -62,7 +62,6 @@ export function useContract() {
       functionName: "approve",
       args: [CONTRACT_ADDRESS, amount],
       account: userAddress,
-      chainId: CHAIN_ID,
     });
   }
 
@@ -73,7 +72,6 @@ export function useContract() {
       functionName: "purchasePolicy",
       args: [flightNumber, flightDate],
       account: userAddress,
-      chainId: CHAIN_ID,
     });
   }
 
@@ -84,7 +82,6 @@ export function useContract() {
       functionName: "mockTriggerPayout",
       args: [BigInt(policyId)],
       account: userAddress,
-      chainId: CHAIN_ID,
     });
   }
 
@@ -95,7 +92,6 @@ export function useContract() {
       functionName: "expirePolicy",
       args: [BigInt(policyId)],
       account: userAddress,
-      chainId: CHAIN_ID,
     });
   }
 
@@ -105,7 +101,6 @@ export function useContract() {
       abi: MOCKUSDC_ABI,
       functionName: "faucet",
       account: userAddress,
-      chainId: CHAIN_ID,
     });
   }
 

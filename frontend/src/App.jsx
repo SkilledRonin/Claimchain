@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { useAccount } from "wagmi";
 import { useContract } from "./hooks/useContract";
 import { usePolicies } from "./hooks/usePolicies";
-import { CONTRACT_ADDRESS } from "frontend/src/utils/constants.js";
+import abi from "./utils/contractABI"
 
 import AnimatedBackground from "./components/AnimatedBackground";
 import Navbar            from "./components/Navbar";

@@ -1,6 +1,6 @@
 import { useReadContract, useWriteContract } from "wagmi";
 import { useAccount } from "wagmi";
-import { CONTRACT_ADDRESS, USDC_ADDRESS } from "../utils/constants";
+import { CONTRACT_ADDRESS, USDC_ADDRESS, CHAIN_ID } from "../utils/constants";
 import { CLAIMCHAIN_ABI, MOCKUSDC_ABI } from "../utils/contractABI";
 
 /**
@@ -61,6 +61,8 @@ export function useContract() {
       abi: MOCKUSDC_ABI,
       functionName: "approve",
       args: [CONTRACT_ADDRESS, amount],
+      account: userAddress,
+      chainId: CHAIN_ID,
     });
   }
 
@@ -70,6 +72,8 @@ export function useContract() {
       abi: CLAIMCHAIN_ABI,
       functionName: "purchasePolicy",
       args: [flightNumber, flightDate],
+      account: userAddress,
+      chainId: CHAIN_ID,
     });
   }
 
@@ -79,6 +83,8 @@ export function useContract() {
       abi: CLAIMCHAIN_ABI,
       functionName: "mockTriggerPayout",
       args: [BigInt(policyId)],
+      account: userAddress,
+      chainId: CHAIN_ID,
     });
   }
 
@@ -88,6 +94,8 @@ export function useContract() {
       abi: CLAIMCHAIN_ABI,
       functionName: "expirePolicy",
       args: [BigInt(policyId)],
+      account: userAddress,
+      chainId: CHAIN_ID,
     });
   }
 
@@ -96,6 +104,8 @@ export function useContract() {
       address: USDC_ADDRESS,
       abi: MOCKUSDC_ABI,
       functionName: "faucet",
+      account: userAddress,
+      chainId: CHAIN_ID,
     });
   }
 

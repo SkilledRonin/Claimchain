@@ -21,16 +21,21 @@ export function usePolicies(policyIds = []) {
   const [eventLog, setEventLog] = useState([]);
 
   // ── Fetch individual policy structs ──────────────────────────────────── //
+  // Serialize policyIds to a stable string so useCallback only re-creates
+  // fetchPolicies when the actual IDs change, not on every array reference change.
+  const policyIdsKey = policyIds?.map(String).join(",") ?? "";
+
   const fetchPolicies = useCallback(async () => {
-    if (!policyIds || policyIds.length === 0) {
+    if (!policyIdsKey) {
       setPolicies([]);
       return;
     }
 
     setIsLoading(true);
     try {
+      const ids = policyIdsKey.split(",").filter(Boolean);
       const results = await Promise.all(
-        policyIds.map(async (id) => {
+        ids.map(async (id) => {
           try {
             const data = await publicClient.readContract({
               address: CONTRACT_ADDRESS,
@@ -48,7 +53,8 @@ export function usePolicies(policyIds = []) {
     } finally {
       setIsLoading(false);
     }
-  }, [policyIds, publicClient]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [policyIdsKey, publicClient]);
 
   useEffect(() => {
     fetchPolicies();

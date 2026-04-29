@@ -1,73 +1,72 @@
 import { PolicyStatusLabel, PolicyStatus } from "../utils/constants";
+import { motion } from "framer-motion";
 
-const STATUS_STYLES = {
-  [PolicyStatus.Active]:   { cls: "badge-active",   icon: "🟢" },
-  [PolicyStatus.PaidOut]:  { cls: "badge-paid",     icon: "💸" },
-  [PolicyStatus.Expired]:  { cls: "badge-expired",  icon: "⏰" },
-  [PolicyStatus.Disputed]: { cls: "badge-disputed", icon: "⚠️" },
+const STATUS_CONFIG = {
+  [PolicyStatus.Active]:   { cls: "status-active",   icon: null,  label: "Active",   dot: "amber" },
+  [PolicyStatus.PaidOut]:  { cls: "status-paid",     icon: "✓",   label: "Paid Out", dot: "green" },
+  [PolicyStatus.Expired]:  { cls: "status-expired",  icon: null,  label: "Expired",  dot: "gray" },
+  [PolicyStatus.Disputed]: { cls: "status-disputed", icon: "⚠",   label: "Disputed", dot: "red" },
 };
 
-/**
- * PolicyCard — displays a single insurance policy with all its details.
- */
 export default function PolicyCard({ policy }) {
-  const statusStyle = STATUS_STYLES[policy.status] ?? STATUS_STYLES[PolicyStatus.Active];
+  const cfg = STATUS_CONFIG[policy.status] ?? STATUS_CONFIG[PolicyStatus.Active];
   const premiumUsdc  = (Number(policy.premiumPaid) / 1_000_000).toFixed(2);
   const payoutUsdc   = (Number(policy.payoutAmount) / 1_000_000).toFixed(2);
-  const purchaseDate = new Date(Number(policy.purchaseTime) * 1000).toLocaleString();
+  const purchaseDate = new Date(Number(policy.purchaseTime) * 1000).toLocaleDateString();
+  const isPaidOut    = policy.status === PolicyStatus.PaidOut;
+  const isActive     = policy.status === PolicyStatus.Active;
 
   return (
-    <div className={`policy-card ${statusStyle.cls}`}>
-      {/* ── Header ── */}
-      <div className="pc-header">
-        <div className="pc-flight">
-          <span className="pc-plane">✈</span>
+    <motion.div
+      className={`policy-card-new glass-card ${cfg.cls}`}
+      whileHover={{ y: -4, boxShadow: "0 0 28px rgba(124,58,237,0.35)" }}
+      transition={{ type: "spring", stiffness: 320, damping: 24 }}
+      layout
+    >
+      {/* Header row */}
+      <div className="pc-top">
+        <div className="pc-flight-info">
+          <span className="pc-plane-icon">✈</span>
           <div>
-            <span className="pc-flight-number">{policy.flightNumber}</span>
-            <span className="pc-flight-date">{policy.flightDate}</span>
+            <div className="pc-flight-num">{policy.flightNumber}</div>
+            <div className="pc-flight-date">{policy.flightDate}</div>
           </div>
         </div>
-        <span className={`badge ${statusStyle.cls}`}>
-          {statusStyle.icon} {PolicyStatusLabel[policy.status]}
+        <span className={`status-badge ${cfg.cls}`}>
+          {isActive && <span className="pulse-dot" />}
+          {cfg.icon && <span className="badge-icon">{cfg.icon}</span>}
+          {cfg.label}
         </span>
       </div>
 
-      {/* ── Details ── */}
-      <div className="pc-details">
-        <div className="pc-stat">
+      {/* Stats */}
+      <div className="pc-stats">
+        <div className="pc-stat-item">
           <span className="pc-stat-label">Policy ID</span>
-          <span className="pc-stat-value">#{policy.policyId.toString()}</span>
+          <span className="pc-stat-value mono">#{policy.policyId.toString()}</span>
         </div>
-        <div className="pc-stat">
-          <span className="pc-stat-label">Premium Paid</span>
-          <span className="pc-stat-value">{premiumUsdc} USDC</span>
+        <div className="pc-stat-item">
+          <span className="pc-stat-label">Premium</span>
+          <span className="pc-stat-value mono">{premiumUsdc} USDC</span>
         </div>
-        <div className="pc-stat">
+        <div className="pc-stat-item">
           <span className="pc-stat-label">Max Payout</span>
-          <span className="pc-stat-value green">{payoutUsdc} USDC</span>
+          <span className={`pc-stat-value mono ${isPaidOut ? "green" : ""}`}>{payoutUsdc} USDC</span>
         </div>
-        <div className="pc-stat">
-          <span className="pc-stat-label">Oracle Confirmed</span>
-          <span className="pc-stat-value">
-            {policy.triggerConfirmed ? "✅ Yes" : "—"}
-          </span>
+        <div className="pc-stat-item">
+          <span className="pc-stat-label">Oracle</span>
+          <span className="pc-stat-value">{policy.triggerConfirmed ? "✅ Confirmed" : "—"}</span>
         </div>
       </div>
 
-      {/* ── Footer ── */}
-      <div className="pc-footer">
+      {/* Footer */}
+      <div className="pc-footer-row">
         <span className="pc-purchased">Purchased {purchaseDate}</span>
-        {policy.status === PolicyStatus.PaidOut && (
-          <span className="pc-payout-badge">🎉 Payout Sent</span>
-        )}
+        {isPaidOut && <span className="payout-badge">🎉 Payout Sent</span>}
       </div>
 
-      {/* ── Progress bar for Active policies ── */}
-      {policy.status === PolicyStatus.Active && (
-        <div className="pc-progress">
-          <div className="pc-progress-bar active-pulse" />
-        </div>
-      )}
-    </div>
+      {/* Active progress bar */}
+      {isActive && <div className="pc-active-bar" />}
+    </motion.div>
   );
 }
